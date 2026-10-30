@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#AE1616">
+<link rel="manifest" href="manifest.json">
+<title>BladiFix</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+<!-- SPLASH -->
+<section class="scr splash" id="splash">
+  <div class="sp-c">
+    <span class="pill">Réseau civique national</span>
+    <div class="logo-box"><img src="assets/logo.png" alt="BladiFix"></div>
+    <h1 class="brand">Bladi<b>Fix</b></h1>
+    <h2>« Votre rue, votre responsabilité. »</h2>
+    <p class="mut">Signalement citoyen et amélioration continue du cadre de vie urbain au Maroc.</p>
+  </div>
+  <div class="sp-b">
+    <button class="btn red" data-go="home">Entrer dans l'application</button>
+    <small class="mut">Version 1.0 · Royaume du Maroc · Données certifiées</small>
+  </div>
+</section>
+
+<!-- ACCUEIL -->
+<section class="scr" id="home">
+  <header class="top"><img src="assets/logo.png" class="mini"><b class="brand sm">Bladi<b>Fix</b></b><span class="pill">Casablanca</span></header>
+  <main>
+    <div class="card hero">
+      <span class="pill">Plateforme municipale participative</span>
+      <h1>Votre rue, votre responsabilité.</h1>
+      <p class="mut">Ensemble pour un espace public plus propre, plus sûr et mieux entretenu.</p>
+      <button class="btn red" data-go="cat">Signaler un problème</button>
+    </div>
+    <div class="row2">
+      <div class="card tap" data-go="map"><h3>Consulter la carte</h3><p class="mut">24 incidents signalés aux alentours</p></div>
+      <div class="card tap" data-go="track"><h3>Mes signalements</h3><p class="mut"><span class="pill" id="cnt">0 en cours</span></p></div>
+    </div>
+    <h3 class="sec">Catégories fréquentes</h3>
+    <div class="grid3" id="quickcats"></div>
+    <h3 class="sec">Dernières résolutions</h3>
+    <div class="card"><div class="meta"><b>Voirie</b> Rue El Oraibi Jilali <span class="pill ok">Résolu</span></div>
+      <p>Réfection complète d'une tranchée non rebouchée signalée il y a 3 jours par 12 riverains.</p>
+      <div class="ba"><div class="ph">Avant</div><div class="ph good">Après</div></div>
+      <p class="mut">Résolu en 48 heures · 34 merci</p></div>
+    <div class="card"><div class="meta"><b>Éclairage</b> Boulevard d'Anfa <span class="pill ok">Résolu</span></div>
+      <p>Remplacement du lampadaire LED défectueux au passage piéton principal.</p></div>
+    <div class="card stat"><b>1420+</b><span class="mut">Interventions citoyennes résolues ce mois-ci</span></div>
+  </main>
+</section>
+
+<!-- CATEGORIE -->
+<section class="scr" id="cat">
+  <header class="top"><button class="ic" data-go="home">←</button><b>Nouveau signalement</b><span class="pill red">Étape 1/4</span></header>
+  <div class="steps"><i class="on"></i><i></i><i></i><i></i></div>
+  <main>
+    <h1>Quelle est la nature du problème ?</h1>
+    <p class="mut">Sélectionnez la catégorie correspondant à la situation constatée sur la voie publique.</p>
+    <div id="catlist"></div>
+    <div class="card note">Un doute ? Choisissez la catégorie la plus approchante. Les équipes reclassifieront le ticket si nécessaire.</div>
+  </main>
+  <footer class="bar"><button class="btn ghost" data-go="home">Annuler</button><button class="btn red" id="catNext" disabled>Continuer</button></footer>
+</section>
+
+<!-- DETAILS -->
+<section class="scr" id="det">
+  <header class="top"><button class="ic" data-go="cat">←</button><b>Étape 2 sur 4</b><span class="pill" id="catTag"></span></header>
+  <div class="steps"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+  <main>
+    <div class="card warn"><b>Obligatoire</b> Preuve visuelle exigée : la photo permet aux services municipaux de qualifier l'urgence.</div>
+    <div class="card">
+      <div class="meta"><h3>Photographies *</h3><span class="pill" id="phCnt">0 / 3</span></div>
+      <div id="thumbs" class="thumbs"></div>
+      <label class="drop">
+        <span class="cam">📷</span><b>Prendre une photo</b>
+        <small class="mut">Accès direct à l'appareil</small>
+        <input type="file" id="f1" accept="image/*" capture="environment" hidden>
+      </label>
+      <label class="btn ghost sm">Importer depuis la galerie<input type="file" id="f2" accept="image/*" multiple hidden></label>
+      <p class="mut tip">Conseil : cadrez le danger en incluant un repère urbain (trottoir, panneau, façade).</p>
+    </div>
+    <div class="card">
+      <h3>Description des faits *</h3>
+      <textarea id="desc" maxlength="500" placeholder="Décrivez la nature du danger, son ampleur et son impact immédiat."></textarea>
+      <div class="meta mut"><span>Minimum 20 caractères</span><span id="chars">0 / 500</span></div>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="card">
+      <div class="meta"><h3>Niveau de criticité</h3><span class="pill red" id="critTag">Important</span></div>
+      <div class="seg" id="crit"><button>Modéré</button><button class="on">Important</button><button>Critique</button></div>
+    </div>
+  </main>
+  <footer class="bar"><button class="btn ghost" data-go="cat">Précédent</button><button class="btn red" id="detNext" disabled>Continuer vers la localisation</button></footer>
+</section>
+
+<!-- LOCALISATION -->
+<section class="scr" id="loc">
+  <header class="top"><button class="ic" data-go="det">←</button><b>Localisation du problème</b><span class="pill red">Étape 3/4</span></header>
+  <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+  <div class="map"><div class="road"></div><div class="pin"></div><span class="pill gps" id="acc">Précision GPS : …</span></div>
+  <main class="sheet">
+    <p class="mut">Adresse identifiée</p>
+    <h3 id="addr">Détection de votre position…</h3>
+    <button class="btn ghost sm" id="redo">Détecter à nouveau</button>
+    <h4>Repère visuel complémentaire <small class="mut">(optionnel)</small></h4>
+    <input id="landmark" placeholder="Ex : en face de la pharmacie Centrale">
+  </main>
+  <footer class="bar"><button class="btn ghost" data-go="det">Annuler</button><button class="btn red" id="locNext">Confirmer la localisation</button></footer>
+</section>
+
+<!-- CONFIRMATION -->
+<section class="scr" id="ok">
+  <main>
+    <div class="check">✓</div>
+    <h1 class="c">Signalement envoyé avec succès !</h1>
+    <p class="mut c">Merci de contribuer activement à l'amélioration de notre cadre urbain.</p>
+    <div class="card c"><small class="mut">Référence officielle</small><h2 id="ref"></h2><button class="btn ghost sm" id="copy">Copier</button></div>
+    <div class="card"><div class="meta"><h3>Détails du dépôt</h3><span class="pill warn2">En attente de prise en charge</span></div>
+      <div class="meta"><b id="okCat"></b><span id="okPrio" class="pill red"></span></div>
+      <p id="okAddr"></p><p class="mut" id="okTime"></p></div>
+    <div class="card"><h3>Prévision de traitement</h3>
+      <ol class="tl"><li class="d">Signalement reçu</li><li class="n">Évaluation technique municipale</li><li>Intervention planifiée</li><li>Réparation &amp; clôture</li></ol></div>
+    <button class="btn red" data-go="track">Suivre mon signalement</button>
+    <button class="btn ghost" data-go="home">Retour à l'accueil</button>
+    <a class="lnk" data-go="cat">Signaler un autre problème</a>
+  </main>
+</section>
+
+<!-- SUIVI -->
+<section class="scr" id="track">
+  <header class="top"><b>Suivi de mes signalements</b></header>
+  <main id="tlist"></main>
+</section>
+
+<!-- CARTE -->
+<section class="scr" id="map">
+  <header class="top"><b>Carte des incidents</b></header>
+  <div class="map tall"><div class="road"></div><div class="pin"></div><div class="pin p2"></div><div class="pin p3"></div></div>
+  <main><p class="mut">24 incidents signalés aux alentours (aperçu).</p></main>
+</section>
+
+<!-- PROFIL -->
+<section class="scr" id="prof">
+  <header class="top"><b>Profil</b></header>
+  <main><div class="card c"><div class="logo-box"><img src="assets/logo.png"></div><h3>Citoyen BladiFix</h3><p class="mut">Version 1.0 · Royaume du Maroc</p></div></main>
+</section>
+
+<nav class="nav" id="nav">
+  <a data-go="home">🏠<span>Accueil</span></a><a data-go="map">🗺️<span>Carte</span></a>
+  <a data-go="cat" class="fab">🔔<span>Signaler</span></a><a data-go="track">📋<span>Suivi</span></a><a data-go="prof">👤<span>Profil</span></a>
+</nav>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
