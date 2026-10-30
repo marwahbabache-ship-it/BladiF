@@ -20,15 +20,42 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Install dependencies
-        run: npm install
+      # Finds index.html anywhere in the repo and builds the www folder from it
+      - name: Prepare web folder
+        run: |
+          if [ ! -f www/index.html ]; then
+            IDX=$(find . -name index.html -not -path "./node_modules/*" -not -path "./android/*" -not -path "./.git/*" | head -n1)
+            if [ -z "$IDX" ]; then echo "ERROR: no index.html found in the repo"; exit 1; fi
+            SRC=$(dirname "$IDX")
+            mkdir -p www
+            rsync -a --exclude .git --exclude .github --exclude node_modules --exclude android --exclude www --exclude package.json --exclude package-lock.json --exclude capacitor.config.json --exclude README.md "$SRC"/ www/
+          fi
+          ls -R www | head -50
+
+      - name: Install Capacitor
+        run: |
+          [ -f package.json ] || npm init -y
+          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
+
+      - name: Create Capacitor config
+        run: |
+          if [ ! -f capacitor.config.json ]; then
+          cat > capacitor.config.json <<'JSON'
+          {
+            "appId": "ma.bladifix.app",
+            "appName": "BladiFix",
+            "webDir": "www"
+          }
+          JSON
+          fi
 
       - name: Add Android platform
-        run: npx cap add android
+        run: '[ -d android ] || npx cap add android'
 
       - name: Add camera and location permissions
         run: |
-          sed -i 's|<application|<uses-permission android:name="android.permission.CAMERA"/>\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>\n    <application|' android/app/src/main/AndroidManifest.xml
+          M=android/app/src/main/AndroidManifest.xml
+          grep -q "ACCESS_FINE_LOCATION" $M || sed -i 's|<application|<uses-permission android:name="android.permission.CAMERA"/>\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>\n    <application|' $M
 
       - name: Sync web assets
         run: npx cap sync android
