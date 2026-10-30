@@ -1,0 +1,6 @@
+{
+  "appId": "ma.bladifix.app",
+  "appName": "BladiFix",
+  "webDir": "www",
+  "server": { "androidScheme": "https" }
+}
